@@ -21,6 +21,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
           width: size.width,
           height: size.height,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               MaterialButton(
                 padding: EdgeInsets.all(15),
