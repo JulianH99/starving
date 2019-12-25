@@ -27,12 +27,14 @@ class _HomeState extends State<Home> {
           color: Colors.white,
         ),
         onPressed: () async {
-          Food food = await Navigator.of(context).push(MaterialPageRoute<Null>(
+          Food food = await Navigator.of(context).push(MaterialPageRoute<Food>(
               builder: (BuildContext context) {
                 return AddFoodDialog();
               },
               fullscreenDialog: true));
-          await _bloc.addFood(food);
+          if (food != null) {
+            _bloc.addFood(food);
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

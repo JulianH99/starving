@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:starving/bloc/food_bloc.dart';
 import 'package:starving/models/food.dart';
 import 'package:starving/models/food_type.dart';
+import 'package:starving/extensions/capitalize.dart';
 
 class AddFoodDialog extends StatefulWidget {
   AddFoodDialog({Key key}) : super(key: key);
@@ -12,7 +13,9 @@ class AddFoodDialog extends StatefulWidget {
 
 class _AddFoodDialogState extends State<AddFoodDialog> {
   final _key = GlobalKey<FormState>();
-  
+
+  String foodName;
+  FoodType foodType;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,9 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
             child: Text("Guardar".toUpperCase()),
             textColor: Colors.white,
             onPressed: () {
-              Navigator.of(context)
-                  .pop(Food(name: "", foodType: FoodType.Primary));
+              print("name of the food is $foodName");
+              Navigator.of(context).pop<Food>(
+                  Food(name: foodName.capitalize(), foodType: foodType));
             },
           )
         ],
@@ -33,7 +37,7 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
       ),
       body: SafeArea(
         child: Form(
-          autovalidate: false,
+          autovalidate: true,
           key: _key,
           child: Container(
             padding: EdgeInsets.all(30),
@@ -45,6 +49,8 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
                     if (text.isEmpty) {
                       return "El nombre no puede ser vacío";
                     }
+
+                    foodName = text;
                     return null;
                   },
                   decoration: InputDecoration(
@@ -58,8 +64,24 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
+                DropdownButton(
+                  isExpanded: true,
+                  value: foodType,
+                  hint: Text("Selecciona un tipo de comida"),
+                  items: FoodType.values.map((FoodType value) {
+                    return new DropdownMenuItem<FoodType>(
+                      value: value,
+                      child: new Text(getTextFromType(value)),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {});
+                    foodType = value;
+                    print("value $foodType");
+                  },
+                )
               ],
             ),
           ),

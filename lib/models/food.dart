@@ -9,20 +9,16 @@ class Food {
 
   Food({@required this.name, @required this.foodType, this.id});
 
-  Food.fromMap(Map<String, dynamic> map)  {
+  Food.fromMap(Map<String, dynamic> map) {
     name = map['name'];
     foodType = FoodType.values[map['food_type']];
     id = map['id'];
   }
 
-  Map<String, dynamic> toMap() => {
-    "name": name,
-    "food_type": foodType
-  };
-
+  Map<String, dynamic> toMap() => {"name": name, "food_type": foodType.index};
 
   Color getColorFromType() {
-    switch(foodType) {
+    switch (foodType) {
       case FoodType.Primary:
         return Colors.green[700];
       case FoodType.Secondary:
@@ -31,17 +27,5 @@ class Food {
         return Colors.yellow[700];
     }
     return Colors.black;
-  }
-
-  String getTextFromType() {
-    switch(foodType) {
-      case FoodType.Primary:
-        return "Principal";
-      case FoodType.Secondary:
-        return "Secundaria";
-      case FoodType.Optional:
-        return "Opcional";
-    }
-    return "";
   }
 }

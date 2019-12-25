@@ -1,5 +1,8 @@
+import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:starving/bloc/food_bloc.dart';
 import 'package:starving/models/food.dart';
+import 'package:starving/models/food_type.dart';
 
 class FoodTile extends StatelessWidget {
   final Food food;
@@ -7,6 +10,7 @@ class FoodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<FoodBloc>(context);
     return ListTile(
       leading: Container(
         width: 30,
@@ -16,11 +20,11 @@ class FoodTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(100)),
       ),
       title: Text(food.name),
-      subtitle: Text(food.getTextFromType()),
+      subtitle: Text(getTextFromType(food.foodType)),
       trailing: IconButton(
         icon: Icon(Icons.delete),
         onPressed: () {
-          
+          bloc.deleteFood(food.id);
         },
       ),
     );
