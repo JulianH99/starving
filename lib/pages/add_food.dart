@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:starving/bloc/food_bloc.dart';
 import 'package:starving/models/food.dart';
 import 'package:starving/models/food_type.dart';
 import 'package:starving/extensions/capitalize.dart';
@@ -27,7 +26,6 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
             child: Text("Guardar".toUpperCase()),
             textColor: Colors.white,
             onPressed: () {
-              print("name of the food is $foodName");
               Navigator.of(context).pop<Food>(
                   Food(name: foodName.capitalize(), foodType: foodType));
             },
@@ -79,7 +77,6 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
                   onChanged: (value) {
                     setState(() {});
                     foodType = value;
-                    print("value $foodType");
                   },
                 )
               ],

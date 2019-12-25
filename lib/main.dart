@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:starving/bloc/food/bloc.dart';
 import 'package:starving/pages/home.dart';
+import 'package:starving/services/foods.dart';
 import 'package:starving/theme.dart';
 
-void main() => runApp(StarvingApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final FoodService foodService = FoodService();
+
+  runApp(StarvingApp(foodService: foodService));
+}
 
 class StarvingApp extends StatefulWidget {
-  StarvingApp({Key key}) : super(key: key);
+  final FoodService foodService;
+  StarvingApp({Key key, @required this.foodService}) : super(key: key);
 
   @override
   _StarvingAppState createState() => _StarvingAppState();
@@ -18,7 +28,10 @@ class _StarvingAppState extends State<StarvingApp> {
       child: MaterialApp(
         theme: starvingTheme(context),
         debugShowCheckedModeBanner: false,
-        home: Home(),
+        home: BlocProvider<FoodBloc>(
+          create: (context) => FoodBloc(widget.foodService),
+          child: Home(),
+        ),
       ),
     );
   }

@@ -18,8 +18,6 @@ class FoodService {
   Future<List<Food>> getFoods() async {
     await this.getDb();
     var foods = await _db.query(DB.tableName);
-    print("Getting foods from db");
-    print(foods);
     return foods.map((food) => Food.fromMap(food)).toList();
   }
 

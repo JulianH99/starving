@@ -1,6 +1,7 @@
-import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:starving/bloc/food_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:starving/bloc/food/bloc.dart';
+
 import 'package:starving/models/food.dart';
 import 'package:starving/pages/add_food.dart';
 import 'package:starving/pages/generator.dart';
@@ -16,7 +17,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var _currentIndex = 0;
   final List<Widget> _views = [GeneratorPage(), MyItemsPage()];
-  final _bloc = FoodBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
               },
               fullscreenDialog: true));
           if (food != null) {
-            _bloc.addFood(food);
+            BlocProvider.of<FoodBloc>(context).add(AddFood(food));
           }
         },
       ),
@@ -43,11 +43,8 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: BlocProvider<FoodBloc>(
-        creator: (_context, _bag) => _bloc,
-        child: SafeArea(
-          child: _views[_currentIndex],
-        ),
+      body: SafeArea(
+        child: _views[_currentIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

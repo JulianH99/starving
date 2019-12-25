@@ -1,8 +1,7 @@
-import 'package:bloc_provider/bloc_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:starving/bloc/food_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:starving/bloc/food/bloc.dart';
 import 'package:starving/models/food_type.dart';
-import 'package:starving/widgets/food_icon.dart';
 import 'package:starving/widgets/food_recomendation.dart';
 
 class GeneratorPage extends StatefulWidget {
@@ -15,48 +14,15 @@ class GeneratorPage extends StatefulWidget {
 class _GeneratorPageState extends State<GeneratorPage> {
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<FoodBloc>(context);
     final size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.all(20),
-      child: StreamBuilder(
-        stream: bloc.recomendations,
-        initialData: {},
-        builder: (context, snap) {
-          if (snap.hasData && snap.data.isNotEmpty) {
-            return Container(
-              width: size.width,
-              height: size.height,
-              child: Column(
-                children: <Widget>[
-                  MaterialButton(
-                    padding: EdgeInsets.all(15),
-                    
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Text(
-                      "¿Qué comeremos mañana?".toUpperCase(),
-                      style: Theme.of(context).textTheme.button.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      bloc.getRecomendations();
-                    },
-                  ),
-                  FoodRecomentadion(
-                    optionalFood: snap.data[FoodType.Optional].name,
-                    primaryFood: snap.data[FoodType.Primary].name,
-                    secondaryFood: snap.data[FoodType.Secondary].name,
-                  )
-                ],
-              ),
-            );
-          } else {
-            return Center(
-              child: MaterialButton(
+        padding: EdgeInsets.all(20),
+        child: Container(
+          width: size.width,
+          height: size.height,
+          child: Column(
+            children: <Widget>[
+              MaterialButton(
                 padding: EdgeInsets.all(15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
@@ -69,13 +35,29 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 ),
                 color: Theme.of(context).accentColor,
                 onPressed: () {
-                  bloc.getRecomendations();
+                  BlocProvider.of<FoodBloc>(context).add(GenerateFood());
                 },
               ),
-            );
-          }
-        },
-      ),
-    );
+              BlocBuilder<FoodBloc, FoodState>(
+                builder: (context, state) {
+                  if (state is FoodLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (state is FoodGenerated) {
+                    return FoodRecomentadion(
+                      optionalFood:
+                          state.recomendations[FoodType.Optional].name,
+                      primaryFood: state.recomendations[FoodType.Primary].name,
+                      secondaryFood:
+                          state.recomendations[FoodType.Secondary].name,
+                    );
+                  }
+
+                  return Container();
+                },
+              )
+            ],
+          ),
+        ));
   }
 }
